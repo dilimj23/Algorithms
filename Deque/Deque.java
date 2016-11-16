@@ -1,3 +1,4 @@
+import java.util.Iterator;
 
 public class Deque<Item> implements Iterable<Item> {
 	private Node first, last;
@@ -72,21 +73,48 @@ public class Deque<Item> implements Iterable<Item> {
 		size--;
 		if (isEmpty()) {
 			last = null;
+		} else {
+			first.prev = null;
 		}
 		return item;
 	}
+	
 	public Item removeLast() {
 		// remove and return the item from the end
 		if (size == 0) {
 			throw new java.util.NoSuchElementException();
 		}
 		Item item = last.item;
-		
-		return null;
+		last = last.prev;
+		size--;
+		if (isEmpty()) {
+			first = null;
+		} else {
+			last.next = null;
+		}
+		return item;
 	}
+	
 	public Iterator<Item> iterator() {
 		// return an iterator over items in order from front to end
-		return null;
+		return new ListIterator();
+	}
+	
+	private class ListIterator implements Iterator<Item> {
+		private Node current = first;
+		
+		public boolean hasNext() {return current != null;}
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+		public Item next() {
+			if (!hasNext()) {
+				throw new java.util.NoSuchElementException();
+			}
+			Item item = current.item;
+			current = current.next;
+			return item;
+		}
 	}
 	public static void main(String[] args) {
 		
